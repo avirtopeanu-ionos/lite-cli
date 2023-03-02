@@ -6,6 +6,7 @@ import (
 
 func init() {
 	Api.AddCommand(cloud)
+	Api.AddCommand(Test)
 }
 
 var Api = &cobra.Command{

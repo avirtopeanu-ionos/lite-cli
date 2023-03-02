@@ -1,21 +1,31 @@
 package die
 
 import (
-	"errors"
 	"fmt"
+	"io"
 	"os"
 )
 
-// Dief exits program execution with the given message
-func Dief(x string, xs ...any) {
-	fmt.Printf(x, xs)
+// FDief ends program execution with the given message
+func FDief(w io.Writer, x string) {
+	fmt.Fprintf(w, x)
 	os.Exit(1)
+}
+
+// Die ends program execution and prints the given message to stderr
+func Die(x string) {
+	FDief(os.Stderr, x)
+}
+
+// DieW accepts err and tries to unwrap to Die
+func DieW(help string, x error) {
+	Die(fmt.Errorf("%s: %w", help, x).Error())
 }
 
 // Must dies if error is not nil
 func Must(err error) {
 	if err != nil {
-		Dief("fatal: %v\n", errors.Unwrap(err))
+		Die(fmt.Errorf("fatal: %w", err).Error())
 	}
 }
 
